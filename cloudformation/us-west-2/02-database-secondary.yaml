@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Stage 3: Aurora Global Database - Secondary Cluster (us-west-2)'
+
+Resources:
+  SecondaryDBCluster:
+    Type: 'AWS::RDS::DBCluster'
+    Properties:
+      Engine: aurora-postgresql
+      EngineVersion: '13.7'
+      DBSubnetGroupName: !ImportValue Secondary-DBSubnetGroup
+      VpcSecurityGroupIds:
+        - !ImportValue Secondary-DBSecurityGroup
+      StorageEncrypted: true
+      GlobalClusterIdentifier: 'panaptico-global-aurora-cluster'
+      SourceDBClusterIdentifier: !ImportValue PrimaryDBClusterArn
+
+Outputs:
+  SecondaryDBClusterEndpoint:
+    Value: !GetAtt SecondaryDBCluster.Endpoint.Address
