@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Stage 5: Continuous Compliance Rules (SOC2, HIPAA)'
+
+Resources:
+  S3PublicReadProhibited:
+    Type: 'AWS::Config::ConfigRule'
+    Properties:
+      ConfigRuleName: 's3-public-read-prohibited-panaptico'
+      Source:
+        Owner: AWS
+        SourceIdentifier: 'S3_BUCKET_PUBLIC_READ_PROHIBITED'
+
+  RdsStorageEncrypted:
+    Type: 'AWS::Config::ConfigRule'
+    Properties:
+      ConfigRuleName: 'rds-storage-encrypted-panaptico'
+      Source:
+        Owner: AWS
+        SourceIdentifier: 'RDS_STORAGE_ENCRYPTED'
+
+  # ... More rules for IAM policies, Security Groups, etc. ...
