@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Stage 2: Core Application Stack (ECS, ALB) for Primary Region (us-east-1)'
+
+Resources:
+  ECSCluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: 'primary-app-cluster-us-east-1'
+
+  ALB:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      Name: 'primary-app-alb-us-east-1'
+      Scheme: internet-facing
+      Subnets: !ImportValue Primary-PublicSubnets
+      SecurityGroups: [!ImportValue Primary-ALBSecurityGroup]
+
+  # ... ECS Task Definition, ECS Service, Target Groups, Listeners ...
+
+Outputs:
+  ALBDnsName:
+    Value: !GetAtt ALB.DNSName
