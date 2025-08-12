@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Stage 1: Aurora Global Database - Primary Cluster (us-east-1) (HIPAA 164.312(a)(2)(iv))'
+
+Resources:
+  PrimaryDBCluster:
+    Type: 'AWS::RDS::DBCluster'
+    Properties:
+      Engine: aurora-postgresql
+      EngineVersion: '13.7'
+      DatabaseName: 'GlobalAppDB'
+      MasterUsername: 'admin'
+      MasterUserPassword: '{{resolve:ssm:/globalapp/db/master-password:1}}'
+      DBSubnetGroupName: !ImportValue Primary-DBSubnetGroup
+      VpcSecurityGroupIds:
+        - !ImportValue Primary-DBSecurityGroup
+      StorageEncrypted: true
+      GlobalClusterIdentifier: 'panaptico-global-aurora-cluster'
+
+Outputs:
+  PrimaryDBClusterEndpoint:
+    Value: !GetAtt PrimaryDBCluster.Endpoint.Address
