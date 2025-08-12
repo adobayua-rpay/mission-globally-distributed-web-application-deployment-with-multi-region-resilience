@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Global IAM Roles for ECS Task Execution and Cross-Account Access (SOC2 CC6.2, HIPAA 164.308(a)(3))'
+
+Parameters:
+  AppName:
+    Type: String
+    Default: 'GlobalWebApp'
+
+Resources:
+  ECSTaskExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Sub '${AppName}-ECSTaskExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
+
+Outputs:
+  ECSTaskExecutionRoleArn:
+    Description: 'ARN of the ECS Task Execution Role'
+    Value: !GetAtt ECSTaskExecutionRole.Arn
